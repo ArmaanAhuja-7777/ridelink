@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:ridelink/pages/auth/signup_page.dart';
+import 'package:ridelink/widgets/bottom_navbar.dart';
 import '../../widgets/custom_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -137,7 +142,11 @@ class _SignInPageState extends State<SignInPage>
                     const Text("Don't have an account? "),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pop(context); // or navigate to SignUpPage
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const SignUpPage())); // or navigate to SignUpPage
                       },
                       child: const Text(
                         "Sign Up",
@@ -157,12 +166,60 @@ class _SignInPageState extends State<SignInPage>
     );
   }
 
-  void _handleSignIn() {
+  void _handleSignIn() async {
     if (_formKey.currentState!.validate()) {
-      // Sign-in logic (to be added)
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login Success Placeholder')),
-      );
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
+
+      try {
+        // Firebase Auth sign in
+        final credential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+
+        final uid = credential.user?.uid;
+
+        if (uid != null) {
+          // Get user details from Firestore
+          final doc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .get();
+
+          if (doc.exists) {
+            final userData = doc.data();
+            final prefs = await SharedPreferences.getInstance();
+
+            // Save data to local storage
+            await prefs.setString('name', userData?['name'] ?? '');
+            await prefs.setString('email', userData?['email'] ?? '');
+
+            if (context.mounted) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const BottomNavWrapper()),
+                (route) => false,
+              );
+            }
+          } else {
+            throw 'User data not found';
+          }
+        }
+      } on FirebaseAuthException catch (e) {
+        String message = 'An error occurred.';
+
+        if (e.code == 'user-not-found') {
+          message = 'No user found for that email.';
+        } else if (e.code == 'wrong-password') {
+          message = 'Wrong password provided.';
+        }
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     }
   }
 }

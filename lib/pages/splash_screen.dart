@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import './auth/signup_page.dart';
+import 'package:ridelink/pages/auth/signup_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ridelink/widgets/bottom_navbar.dart';
+import './auth/signin_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,7 +25,6 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // Circle expands slowly over 4 seconds
     _circleController = AnimationController(
       duration: const Duration(seconds: 4),
       vsync: this,
@@ -34,9 +36,8 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    // Text fades in halfway through
     _textFadeController = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 300),
       vsync: this,
     );
     _textFadeAnimation = CurvedAnimation(
@@ -49,13 +50,35 @@ class _SplashScreenState extends State<SplashScreen>
       _textFadeController.forward();
     });
 
-    // Navigate after 4.5 seconds
-    Future.delayed(const Duration(milliseconds: 2000), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const SignUpPage()),
-      );
-    });
+    _navigateToNextScreen();
+  }
+
+  Future<void> _navigateToNextScreen() async {
+    await Future.delayed(
+        const Duration(milliseconds: 3000)); // Wait for animation
+
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email');
+    final name = prefs.getString('name');
+
+    // Navigate based on login state
+    if (email != null && name != null) {
+      // ✅ User is logged in
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const BottomNavWrapper()),
+        );
+      }
+    } else {
+      // 🚪 Not logged in
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const SignUpPage()),
+        );
+      }
+    }
   }
 
   @override
