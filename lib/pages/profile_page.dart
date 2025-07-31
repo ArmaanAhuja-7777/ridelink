@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:ridelink/pages/auth/signup_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ridelink/services/auth_service.dart';
 import '../pages/auth/signin_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,8 +35,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    final authService = AuthService();
+    await authService.signOut();
     if (context.mounted) {
       Navigator.pushAndRemoveUntil(
         context,
@@ -47,6 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _deleteAccount() async {
     final user = FirebaseAuth.instance.currentUser;
+    final authService = AuthService();
 
     if (user != null) {
       try {
@@ -58,9 +60,8 @@ class _ProfilePageState extends State<ProfilePage> {
         // Delete the user from Firebase Auth
         await user.delete();
 
-        // Clear local storage
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.clear();
+        // Sign out from all services and clear local storage
+        await authService.signOut();
 
         // Navigate to sign in page
         if (context.mounted) {

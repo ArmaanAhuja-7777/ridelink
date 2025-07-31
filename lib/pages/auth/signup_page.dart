@@ -133,7 +133,7 @@ class _SignUpPageState extends State<SignUpPage>
                       SizedBox(
                         width: double.infinity,
                         child: OutlinedButton(
-                          onPressed: () => {},
+                          onPressed: _handleGoogleSignIn,
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 20),
@@ -239,6 +239,23 @@ class _SignUpPageState extends State<SignUpPage>
           SnackBar(content: Text("${e.toString()}")),
         );
       }
+    }
+  }
+
+  void _handleGoogleSignIn() async {
+    final authService = AuthService();
+    final userCredential = await authService.signInWithGoogle();
+    if (userCredential != null && context.mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const MainPage()),
+        (route) => false,
+      );
+    } else {
+      // Handle error or cancellation
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Google Sign-In failed.')),
+      );
     }
   }
 }
