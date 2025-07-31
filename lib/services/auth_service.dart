@@ -32,6 +32,7 @@ class AuthService {
         await _firestore.collection('users').doc(user.uid).set({
           'name': user.displayName,
           'email': user.email,
+          'photoURL': user.photoURL,
           'uid': user.uid,
           'createdAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
@@ -40,6 +41,9 @@ class AuthService {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('name', user.displayName ?? 'No Name');
         await prefs.setString('email', user.email ?? 'No Email');
+        if (user.photoURL != null) {
+          await prefs.setString('photoURL', user.photoURL!);
+        }
       }
 
       return userCredential;

@@ -17,6 +17,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String name = "";
   String email = "";
+  String? photoURL;
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         name = prefs.getString('name') ?? 'Unknown';
         email = prefs.getString('email') ?? 'Unknown';
+        photoURL = prefs.getString('photoURL');
       });
     }
   }
@@ -89,10 +91,15 @@ class _ProfilePageState extends State<ProfilePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
-            child: SizedBox(
-              height: 150,
-              child: Lottie.asset('assets/lottie/avatar.json'),
-            ),
+            child: photoURL != null
+                ? CircleAvatar(
+                    radius: 75,
+                    backgroundImage: NetworkImage(photoURL!),
+                  )
+                : SizedBox(
+                    height: 150,
+                    child: Lottie.asset('assets/lottie/avatar.json'),
+                  ),
           ),
           const SizedBox(height: 20),
           Card(
