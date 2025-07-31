@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:ridelink/widgets/bottom_navbar.dart';
+import 'package:ridelink/pages/main_page.dart';
+import 'package:ridelink/services/auth_service.dart';
 import '../auth/signin_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/custom_text_field.dart';
@@ -132,7 +133,7 @@ class _SignUpPageState extends State<SignUpPage>
                       SizedBox(
                         width: double.infinity,
                         child: OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () => {},
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 20),
@@ -226,7 +227,7 @@ class _SignUpPageState extends State<SignUpPage>
         if (context.mounted) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => const BottomNavWrapper()),
+            MaterialPageRoute(builder: (_) => const MainPage()),
           );
         }
       } on FirebaseAuthException catch (e) {

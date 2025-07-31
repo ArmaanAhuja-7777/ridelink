@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ridelink/pages/auth/signup_page.dart';
+import 'package:ridelink/pages/main_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ridelink/widgets/bottom_navbar.dart';
 import './auth/signin_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -61,13 +61,12 @@ class _SplashScreenState extends State<SplashScreen>
     final email = prefs.getString('email');
     final name = prefs.getString('name');
 
-    // Navigate based on login state
     if (email != null && name != null) {
       // ✅ User is logged in
       if (context.mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const BottomNavWrapper()),
+          MaterialPageRoute(builder: (_) => const MainPage()),
         );
       }
     } else {

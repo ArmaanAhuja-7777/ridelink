@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:ridelink/pages/auth/signup_page.dart';
-import 'package:ridelink/widgets/bottom_navbar.dart';
+import 'package:ridelink/pages/main_page.dart';
+import 'package:ridelink/services/auth_service.dart';
 import '../../widgets/custom_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -110,9 +111,7 @@ class _SignInPageState extends State<SignInPage>
                       SizedBox(
                         width: double.infinity,
                         child: OutlinedButton(
-                          onPressed: () {
-                            // Google login logic
-                          },
+                          onPressed: () => {},
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 20),
@@ -196,7 +195,7 @@ class _SignInPageState extends State<SignInPage>
             if (context.mounted) {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (_) => const BottomNavWrapper()),
+                MaterialPageRoute(builder: (_) => const MainPage()),
                 (route) => false,
               );
             }

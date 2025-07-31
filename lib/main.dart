@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ridelink/pages/auth/signup_page.dart';
-import 'package:ridelink/pages/profile_page.dart';
-import 'package:ridelink/widgets/bottom_navbar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import './pages/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:ridelink/pages/home_page.dart';
+import 'package:ridelink/pages/main_page.dart';
+import 'package:ridelink/pages/splash_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -14,7 +10,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -35,7 +31,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: const MainPage(),
     );
   }
 }
