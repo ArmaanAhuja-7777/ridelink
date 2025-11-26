@@ -1,3 +1,4 @@
+import 'package:ridelink/pages/wifi_connection_page.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:ridelink/pages/auth/signup_page.dart';
@@ -126,6 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           const SizedBox(height: 40),
+          
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(

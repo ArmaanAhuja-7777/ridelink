@@ -21,7 +21,7 @@ class _MainPageState extends State<MainPage> {
 
   final List<String> _titles = [
     'Home',
-    'Rides',
+    'Data',
     'Profile',
   ];
 

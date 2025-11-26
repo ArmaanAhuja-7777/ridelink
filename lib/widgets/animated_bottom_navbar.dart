@@ -46,8 +46,8 @@ class AnimatedBottomNavBar extends StatelessWidget {
                   text: 'Home',
                 ),
                 GButton(
-                  icon: Icons.directions_car,
-                  text: 'Rides',
+                  icon: Icons.data_thresholding_rounded,
+                  text: 'Data',
                 ),
                 GButton(
                   icon: Icons.person,
